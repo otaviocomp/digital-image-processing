@@ -1,1 +1,2 @@
-# digital-image-processing
+digital image processing using opencv library
+
