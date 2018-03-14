@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	// rotulação e contagem de bolhas
+	// rotulação e contagem 
 	for(int i = 0; i < image.rows; i++)
 	{
 		for(int j = 0; j < image.cols; j++)
@@ -79,10 +79,8 @@ int main(int argc, char **argv)
 				temp2 = 0;
 			}
 		}
+		aux = 0;
+		temp2 = 0;
 	}
-
 	printf("numero de bolhas:%d\nnumero de bolhas furadas:%d\n", num_obj, num_obj_bolhas);	
-	imshow("image", image);
-	waitKey();
 }
-		
