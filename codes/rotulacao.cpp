@@ -6,6 +6,7 @@ using namespace cv;
 int main(int argc, char **argv)
 {
 	Mat image;
+	int obj = 0, bolhas = 0;
 	CvPoint p;
 	image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 	if(!image.data)
@@ -14,7 +15,7 @@ int main(int argc, char **argv)
 		return(-1);
 	}
 
-	// pré processamento para retirar as bolhas das bordas
+	// pré processamento para retirar os objetos das bordas
 	for(int i = 0; i < image.rows; i++)
 	{
 		if(image.at<uchar>(i, 0) == 255)
@@ -46,8 +47,10 @@ int main(int argc, char **argv)
 		}
 	}
 
-	int num_obj = 0, num_obj_bolhas = 0, temp1, temp2;
-	bool zero; //indica se está passando numa região com pixel de tom zero
+	// muda a cor de fundo
+	p.x = 0;
+	p.y = 0;
+	floodFill(image, p, 254);
 
 	// rotulação e contagem 
 	for(int i = 0; i < image.rows; i++)
@@ -58,31 +61,17 @@ int main(int argc, char **argv)
 			{
 				p.x = j;
 				p.y = i;
-				floodFill(image, p, ++num_obj);
+				floodFill(image, p, ++obj);
 			}
-			temp1 = image.at<uchar>(i, j);
-			// alterar
-			if(temp1 != 0)
-				temp2 = temp1;
-			if(temp1 == 0 && temp2 != 0)
-				zero = 1;
-			if(temp1 - temp2 == 1)
+			if(image.at<uchar>(i, j) == 0)
 			{
-				temp2 = 0;
-				zero = 0;
-			}
-			if(temp1 != 0 && temp2 == temp1 && zero == 1)
-			{
-				num_obj_bolhas++;
+				bolhas++;
 				p.x = j;
 				p.y = i;
-				floodFill(image, p, 0);
-				zero = 0;
-				temp2 = 0;
+				floodFill(image, p, 128);
 			}
 		}
-		zero = 0;
-		temp2 = 0;
 	}
-	printf("numero de bolhas:%d\nnumero de bolhas furadas:%d\n", num_obj, num_obj_bolhas);	
+	imshow("resultado", image);
+	printf("numero de objetos:%d\nnumero de bolhas:%d\n", obj, bolhas);	
 }
