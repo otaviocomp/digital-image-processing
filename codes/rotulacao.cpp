@@ -73,5 +73,6 @@ int main(int argc, char **argv)
 		}
 	}
 	imshow("resultado", image);
+	imwrite("../images/resultado3.png", image);
 	printf("numero de objetos:%d\nnumero de bolhas:%d\n", obj, bolhas);	
 }
