@@ -6,8 +6,6 @@ using namespace cv;
 int main(int argc, char **argv)
 {
 	Mat image;
-	int num_obj = 0, num_obj_bolhas = 0, temp1, temp2 = 0;
-	bool aux = 0;
 	CvPoint p;
 	image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 	if(!image.data)
@@ -48,6 +46,9 @@ int main(int argc, char **argv)
 		}
 	}
 
+	int num_obj = 0, num_obj_bolhas = 0, temp1, temp2;
+	bool zero; //indica se está passando numa região com pixel de tom zero
+
 	// rotulação e contagem 
 	for(int i = 0; i < image.rows; i++)
 	{
@@ -60,26 +61,27 @@ int main(int argc, char **argv)
 				floodFill(image, p, ++num_obj);
 			}
 			temp1 = image.at<uchar>(i, j);
+			// alterar
 			if(temp1 != 0)
 				temp2 = temp1;
 			if(temp1 == 0 && temp2 != 0)
-				aux = 1;
+				zero = 1;
 			if(temp1 - temp2 == 1)
 			{
 				temp2 = 0;
-				aux = 0;
+				zero = 0;
 			}
-			if(temp1 != 0 && temp2 == temp1 && aux == 1)
+			if(temp1 != 0 && temp2 == temp1 && zero == 1)
 			{
 				num_obj_bolhas++;
 				p.x = j;
 				p.y = i;
 				floodFill(image, p, 0);
-				aux = 0;
+				zero = 0;
 				temp2 = 0;
 			}
 		}
-		aux = 0;
+		zero = 0;
 		temp2 = 0;
 	}
 	printf("numero de bolhas:%d\nnumero de bolhas furadas:%d\n", num_obj, num_obj_bolhas);	

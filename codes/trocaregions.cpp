@@ -19,5 +19,6 @@ int main(int argc, char **argv)
 			altimage.at<uchar>(image.rows/2 + i, image.cols/2 + j) = image.at<uchar>(i, j);
 		}
 	imshow("imagem trocada", altimage);
+	imwrite("../images/resultado2.png", altimage);
 	waitKey();
 }
