@@ -62,8 +62,8 @@ int main(int argc, char** argv){
     histImgGr.copyTo(gray_image(Rect(0, 0       ,nbins, histh)));
     histImgEq.copyTo(equalize_image(Rect(0, histh   ,nbins, histh)));
 
-    imshow("image", image);
-	imwrite("../images/resultado4.png", image);
+    imshow("image", equalize_image);
+	imwrite("../images/resultado4.png", equalize_image);
     if(waitKey(30) >= 0) break;
   }
   return 0;
