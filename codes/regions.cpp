@@ -3,14 +3,12 @@
 
 using namespace cv;
 
-struct ponto
-{
+struct ponto{
 	int l;
 	int c;
 };
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
 	struct ponto p1, p2;
 	Mat image;
 
@@ -31,8 +29,7 @@ int main(int argc, char **argv)
 
 	if(((p1.l || p2.l) > image.rows) || ((p1.c || p2.c) > image.cols))
 		printf("ponto(s) fora da imagem!\n");
-	else
-	{
+	else{
 		if(p1.l <= p2.l && p1.c <= p2.c)
 			for(int i = p1.l; i < p2.l; i++)
 				for(int j = p1.c; j < p2.c; j++)
