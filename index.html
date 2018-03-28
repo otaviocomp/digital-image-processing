@@ -447,7 +447,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="sect2">
 <h3 id="_2_1_primeira_atividade">2.1 Primeira atividade</h3>
+<div class="paragraph">
+<p>A primeira atividade consiste em fazer o negativo de uma imagem. Para realizar está atividade basta atribuír o valor da imagem como sendo o 255 (escala máxima do tom de cinza) menos o valor atual da imagem, isto irá inverter os tons, causando o efeito de imagem em negativo.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_código">código</h3>
 
+</div>
+<div class="sect2">
+<h3 id="_resultado">resultado</h3>
+<div class="paragraph">
+<div class="title">resultado</div>
+<p>image::images/resultado1.png</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_2_2_segunda_atividade">2.2 Segunda atividade</h3>
@@ -455,15 +468,38 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>A segunda atividade consiste na troca dos quadrantes da imagem. O primeiro e o terceiro quadrantes são trocados de posição, o primeiro fica no lugar do terceiro e vice versa, o mesmo acontece com o segundo e quarto quadrantes. No código abaixo, foram lidas duas imagens com o mesmo tamanho, a segunda imagem é o resultado da imagem carregada originalmente. Dentro do laço é realizada a operação da troca dos quadrantes, os pixels do primeiro quadrante foram copiados para a posição do terceiro e vice versa, o mesmo foi feito no segundo e quarto quadrante. No final, tem-se o resultado.</p>
 </div>
 <div class="sect3">
-<h4 id="_código">código</h4>
+<h4 id="_código_2">código</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-cpp" data-lang="cpp">include::codes/trocaregions.cpp</code></pre>
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;stdio.h&gt;
+#include &lt;opencv2/opencv.hpp&gt;</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>using namespace cv;</p>
+</div>
+<div class="paragraph">
+<p>int main(int argc, char **argv){
+	Mat image,altimage;
+	image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
+	altimage = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
+	if(!image.data)
+		printf("erro ao abrir a image\n");
+	for(int i=0; i&lt;image.rows/2; i)
+		for(int j=0; j&lt;image.cols/2; j){
+			altimage.at&lt;uchar&gt;(i,j) = image.at&lt;uchar&gt;(image.rows/2 + i,image.cols/2 + j);
+			altimage.at&lt;uchar&gt;(i,image.cols/2 + j) = image.at&lt;uchar&gt;(image.rows/2 + i,j);
+			altimage.at&lt;uchar&gt;(image.rows/2 + i,j) = image.at&lt;uchar&gt;(i,image.cols/2 + j);
+			altimage.at&lt;uchar&gt;(image.rows/2 + i,image.cols/2 + j) = image.at&lt;uchar&gt;(i,j);
+		}
+	imshow("imagem trocada", altimage);
+	imwrite("../images/resultado2.png", altimage);
+	waitKey();
+}</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_resultado">resultado</h4>
+<h4 id="_resultado_2">resultado</h4>
 <div class="imageblock">
 <div class="content">
 <img src="images/resultado2.png" alt="biel trocado">
@@ -477,11 +513,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 
 </div>
 <div class="sect2">
-<h3 id="_código_2">código</h3>
+<h3 id="_código_3">código</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_resultado_2">resultado</h3>
+<h3 id="_resultado_3">resultado</h3>
 <div class="imageblock">
 <div class="content">
 <img src="images/resultado3.png" alt="bolhas">
@@ -494,7 +530,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-03-16 18:52:57 -03
+Last updated 2018-03-28 14:51:02 -03
 </div>
 </div>
 </body>

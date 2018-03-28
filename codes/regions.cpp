@@ -48,5 +48,6 @@ int main(int argc, char **argv){
 					image.at<uchar>(i,j)=255 - image.at<uchar>(i,j);
 	}
 	imshow("janela",image);
+	imwrite("../images/resultado1.png",image);
 	waitKey();
 }
