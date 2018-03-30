@@ -445,18 +445,76 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight"><code class="language-cpp" data-lang="cpp">printf("Hello, World!");</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_2_1_primeira_atividade">2.1 Primeira atividade</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_1_primeira_atividade_negativo_de_uma_região">2.1 Primeira atividade - negativo de uma região)</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A primeira atividade consiste em fazer o negativo de uma imagem. Para realizar está atividade basta atribuír o valor da imagem como sendo o 255 (escala máxima do tom de cinza) menos o valor atual da imagem, isto irá inverter os tons, causando o efeito de imagem em negativo.</p>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_código">código</h3>
+<h3 id="_código">código:</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;stdio.h&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace cv;
+
+struct ponto{
+	int l;
+	int c;
+};
+
+int main(int argc, char **argv){
+	struct ponto p1,p2;
+	Mat image;
+
+	image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
+	if(!image.data)
+		printf("erro ao abrir a imagem\n");
+
+	printf("tamanho da imagem: %dx%d\n\n", image.rows, image.cols);
+
+	printf("P1:\n linha do ponto P1: ");
+	scanf("%d",&amp;p1.l);
+	printf(" coluna do ponto P1: ");
+	scanf("%d",&amp;p1.c);
+	printf("P2:\n linha do ponto P2: ");
+	scanf("%d",&amp;p2.l);
+	printf(" coluna do ponto P2: ");
+	scanf("%d",&amp;p2.c);
+
+	if(((p1.l || p2.l)&gt;image.rows) || ((p1.c || p2.c)&gt;image.cols))
+		printf("ponto(s) fora da imagem!\n");
+	else{
+		if(p1.l &lt;= p2.l &amp;&amp; p1.c &lt;= p2.c)
+			for(int i=p1.l; i&lt;p2.l; i++)
+				for(int j=p1.c; j&lt;p2.c; j++)
+					image.at&lt;uchar&gt;(i,j)=255 - image.at&lt;uchar&gt;(i,j);
+		else if(p1.l &lt;= p2.l &amp;&amp; p1.c&gt;p2.c)
+			for(int i=p1.l; i&lt;p2.l; i++)
+				for(int j=p2.c; j&lt;p1.c; j++)
+					image.at&lt;uchar&gt;(i,j)=255 - image.at&lt;uchar&gt;(i,j);
+		else if(p1.l &gt;= p2.l &amp;&amp; p1.c &lt;= p2.c)
+			for(int i=p2.l; i &lt; p1.l; i++)
+				for(int j=p1.c; j&lt;p2.c; j++)
+					image.at&lt;uchar&gt;(i,j)=255 - image.at&lt;uchar&gt;(i,j);
+		else
+			for(int i=p2.l; i&lt;p1.l; i++)
+				for(int j=p2.c; j&lt;p1.c; j++)
+					image.at&lt;uchar&gt;(i,j)=255 - image.at&lt;uchar&gt;(i,j);
+	}
+	imshow("janela",image);
+	imwrite("../images/resultado1.png",image);
+	waitKey();
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_resultado">resultado</h3>
+<h3 id="_resultado">resultado:</h3>
 <div class="imageblock">
 <div class="content">
 <img src="images/resultado1.png" alt="biel invertido">
@@ -464,31 +522,31 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="title">Figure 1. resultado</div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_2_2_segunda_atividade">2.2 Segunda atividade</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_2_segunda_atividade_inverter_quadrantes">2.2 Segunda atividade - inverter quadrantes</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A segunda atividade consiste na troca dos quadrantes da imagem. O primeiro e o terceiro quadrantes são trocados de posição, o primeiro fica no lugar do terceiro e vice versa, o mesmo acontece com o segundo e quarto quadrantes. No código abaixo, foram lidas duas imagens com o mesmo tamanho, a segunda imagem é o resultado da imagem carregada originalmente. Dentro do laço é realizada a operação da troca dos quadrantes, os pixels do primeiro quadrante foram copiados para a posição do terceiro e vice versa, o mesmo foi feito no segundo e quarto quadrante. No final, tem-se o resultado.</p>
 </div>
-<div class="sect3">
-<h4 id="_código_2">código</h4>
+<div class="sect2">
+<h3 id="_código_2">código:</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;stdio.h&gt;
-#include &lt;opencv2/opencv.hpp&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>using namespace cv;</p>
-</div>
-<div class="paragraph">
-<p>int main(int argc, char **argv){
+#include &lt;opencv2/opencv.hpp&gt;
+
+using namespace cv;
+
+int main(int argc, char **argv){
 	Mat image,altimage;
 	image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
 	altimage = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
 	if(!image.data)
 		printf("erro ao abrir a image\n");
-	for(int i=0; i&lt;image.rows/2; i)
-		for(int j=0; j&lt;image.cols/2; j){
+	for(int i=0; i&lt;image.rows/2; i++)
+		for(int j=0; j&lt;image.cols/2; j++){
 			altimage.at&lt;uchar&gt;(i,j) = image.at&lt;uchar&gt;(image.rows/2 + i,image.cols/2 + j);
 			altimage.at&lt;uchar&gt;(i,image.cols/2 + j) = image.at&lt;uchar&gt;(image.rows/2 + i,j);
 			altimage.at&lt;uchar&gt;(image.rows/2 + i,j) = image.at&lt;uchar&gt;(i,image.cols/2 + j);
@@ -497,11 +555,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 	imshow("imagem trocada", altimage);
 	imwrite("../images/resultado2.png", altimage);
 	waitKey();
-}</p>
+}</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_resultado_2">resultado</h4>
+</div>
+<div class="sect2">
+<h3 id="_resultado_2">resultado:</h3>
 <div class="imageblock">
 <div class="content">
 <img src="images/resultado2.png" alt="biel trocado">
@@ -510,18 +569,87 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_2_3_2_terceira_atividade">2.3.2 Terceira atividade</h3>
+</div>
+<div class="sect1">
+<h2 id="_2_3_terceira_atividade_rotulação">2.3 Terceira atividade - rotulação</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A terceira atividade consiste na contagem do número de objetos com bolhas que existem em uma determinada imagem. Primeiramente é feito um pré processamento para a retirada dos objetos que encostam na borda, isso é feito através do floodfill, que percorre todos os pixels da mesma cor de pixel inicial, também chamado de raíz, e os pinta de uma cor. Depois do pré processamento, aplica-se um floodfill no fundo da image, isso ajuda na diferenciação do fundo da imagem das bolhas. Depois é feito a rotulação, onde cada objeto é pintado com um tom de cinza que começa de 1 e vai até a quantidade de objetos na imagem. Por fim, percorre-se a imagem até encontrar um pixel preto, isso indica a presença de uma bolha, e aplica-se o floodfill para pintar a bolha.</p>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_código_3">código</h3>
+<h3 id="_código_3">código:</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;stdio.h&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace cv;
+
+int main(int argc, char **argv){
+	Mat image;
+	int obj=0,bolhas=0;
+	CvPoint p;
+	image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
+	if(!image.data){
+		printf("erro ao carregar a imagem!\n");
+		return(-1);
+	}
+
+	// pré processamento para retirar os objetos das bordas
+	for(int i=0; i&lt;image.rows; i++){
+		if(image.at&lt;uchar&gt;(i, 0) == 255){
+			p.x=0;
+			p.y=i;
+			floodFill(image,p,0);
+		}
+		if(image.at&lt;uchar&gt;(i,image.cols - 1) == 255){
+			p.x=image.cols - 1;
+			p.y=i;
+			floodFill(image,p,0);
+		}
+	}
+	for(int i=0; i&lt;image.cols; i++){
+		if(image.at&lt;uchar&gt;(0,i) == 255){
+			p.x=i;
+			p.y=0;
+			floodFill(image,p,0);
+		}
+		if(image.at&lt;uchar&gt;(image.rows - 1, i) == 255){
+			p.x=i;
+			p.y=image.rows - 1;
+			floodFill(image,p,0);
+		}
+	}
+
+	// muda a cor de fundo
+	p.x=0;
+	p.y=0;
+	floodFill(image,p,254);
+
+	// rotulação e contagem
+	for(int i=0; i&lt;image.rows; i++)
+		for(int j=0; j&lt;image.cols; j++){
+			if(image.at&lt;uchar&gt;(i, j) == 255){
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,++obj);
+			}
+			if(image.at&lt;uchar&gt;(i,j) == 0){
+				bolhas++;
+				p.x=j;
+				p.y=i;
+				floodFill(image,p,128);
+			}
+		}
+	imshow("resultado",image);
+	imwrite("../images/resultado3.png",image);
+	printf("numero de objetos:%d\nnumero de bolhas:%d\n",obj,bolhas);
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_resultado_3">resultado</h3>
+<h3 id="_resultado_3">resultado:</h3>
 <div class="imageblock">
 <div class="content">
 <img src="images/resultado3.png" alt="bolhas">
@@ -529,16 +657,259 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="title">Figure 3. resultado</div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_4_quarta_atividade_histograma">2.4 Quarta atividade - histograma</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_2_4_quarta_atividade">2.4 Quarta atividade</h3>
+<h3 id="_2_4_1_equalização">2.4.1 equalização</h3>
+<div class="paragraph">
+<p>Nesta atividade é feita a equalização de uma imagem. Para isso usa-se a câmera disponível no pc para capturar a imagem. A equalização da imagem é feita através da função "equalizeHist", ela redistribui os tons da imagem de tal forma que as transições entre os tons sejam mais suaves.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_código_4">código:</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv){
+  Mat image, gray_image, equalize_image, histGr, histEq;
+  int width, height;
+  VideoCapture cap;
+  int nbins = 64;
+  float range[] = {0, 256};
+  const float *histrange = { range };
+  bool uniform = true;
+  bool acummulate = false;
+
+  cap.open(0);
+
+  if(!cap.isOpened()){
+    cout &lt;&lt; "cameras indisponiveis";
+    return -1;
+  }
+
+  width  = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+  height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+
+  cout &lt;&lt; "largura = " &lt;&lt; width &lt;&lt; endl;
+  cout &lt;&lt; "altura  = " &lt;&lt; height &lt;&lt; endl;
+
+  int histw = nbins, histh = nbins/2;
+  Mat histImgGr(histh, histw, CV_8UC1, Scalar(0,0,0));
+  Mat histImgEq(histh, histw, CV_8UC1, Scalar(0,0,0));
+
+  while(1){
+    cap &gt;&gt; image;
+	cvtColor(image,gray_image,CV_BGR2GRAY);
+	equalizeHist(gray_image,equalize_image);
+
+    calcHist(&amp;gray_image, 1, 0, Mat(), histGr, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+    calcHist(&amp;equalize_image, 1, 0, Mat(), histEq, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+
+    normalize(histGr, histGr, 0, histImgGr.rows, NORM_MINMAX, -1, Mat());
+    normalize(histEq, histEq, 0, histImgEq.rows, NORM_MINMAX, -1, Mat());
+
+    histImgGr.setTo(Scalar(0));
+    histImgEq.setTo(Scalar(0));
+
+    for(int i=0; i&lt;nbins; i++){
+      line(histImgGr,
+           Point(i, histh),
+           Point(i, histh-cvRound(histGr.at&lt;float&gt;(i))),
+           Scalar(255), 1, 8, 0);
+      line(histImgEq,
+           Point(i, histh),
+           Point(i, histh-cvRound(histEq.at&lt;float&gt;(i))),
+           Scalar(255), 1, 8, 0);
+    }
+    histImgGr.copyTo(gray_image(Rect(0, 0       ,nbins, histh)));
+    histImgEq.copyTo(equalize_image(Rect(0, histh   ,nbins, histh)));
+
+    imshow("image", equalize_image);
+	imwrite("../images/resultado4.png", equalize_image);
+    if(waitKey(30) &gt;= 0) break;
+  }
+  return 0;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resultado_4">resultado:</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_código_4">código</h3>
+<h3 id="_2_4_2_detector_de_movimentos">2.4.2 detector de movimentos</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_resultado_4">resultado</h3>
+<h3 id="_código_5">código:</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_resultado_5">resultado:</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_5_quinta_atividade_laplaciano_do_gaussiano">2.5 Quinta atividade - laplaciano do gaussiano</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">resultado</div>
+<p>Nesta atividade é feita a adição da funcionalidade lapgauss, que nada mais é que o filtro quq o laplaciano do gaussiano de uma imagem. Para isto, bastou adicionar mais um case que representa o laplgauss e seu respectivo filtro.</p>
+</div>
+<div class="sect2">
+<h3 id="_código_6">código:</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+
+using namespace cv;
+using namespace std;
+
+void printmask(Mat &amp;m){
+  for(int i=0; i&lt;m.size().height; i++){
+    for(int j=0; j&lt;m.size().width; j++){
+      cout &lt;&lt; m.at&lt;float&gt;(i,j) &lt;&lt; ",";
+    }
+    cout &lt;&lt; endl;
+  }
+}
+
+void menu(){
+  cout &lt;&lt; "\npressione a tecla para ativar o filtro: \n"
+	"a - calcular modulo\n"
+    "m - media\n"
+    "g - gauss\n"
+    "v - vertical\n"
+	"h - horizontal\n"
+    "l - laplaciano\n"
+	"x - lapgauss\n"
+	"esc - sair\n";
+}
+
+int main(int argvc, char** argv){
+  VideoCapture video;
+  float media[] = {1,1,1,
+				   1,1,1,
+				   1,1,1};
+  float gauss[] = {1,2,1,
+				   2,4,2,
+				   1,2,1};
+  float horizontal[]={-1,0,1,
+					  -2,0,2,
+					  -1,0,1};
+  float vertical[]={-1,-2,-1,
+					0,0,0,
+					1,2,1};
+  float laplacian[]={0,-1,0,
+					 -1,4,-1,
+					 0,-1,0};
+  float lapgauss[]={0,0,1,0,0,
+  					0,1,2,1,0,
+					1,2,-16,2,1,
+					0,1,2,1,0,
+					0,0,1,0,0};
+
+  Mat cap, frame, frame32f, frameFiltered;
+  Mat mask(3,3,CV_32F), mask1;
+  Mat result, result1;
+  double width, height, min, max;
+  int absolut;
+  char key;
+
+  video.open(0);
+  if(!video.isOpened())
+    return -1;
+  width=video.get(CV_CAP_PROP_FRAME_WIDTH);
+  height=video.get(CV_CAP_PROP_FRAME_HEIGHT);
+  std::cout &lt;&lt; "largura=" &lt;&lt; width &lt;&lt; "\n";;
+  std::cout &lt;&lt; "altura =" &lt;&lt; height&lt;&lt; "\n";;
+
+  namedWindow("filtroespacial",1);
+
+  mask = Mat(3, 3, CV_32F, media);
+  scaleAdd(mask, 1/9.0, Mat::zeros(3,3,CV_32F), mask1);
+  swap(mask, mask1);
+  absolut=1; // calcs abs of the image
+
+  menu();
+  for(;;){
+    video &gt;&gt; cap;
+    cvtColor(cap, frame, CV_BGR2GRAY);
+    flip(frame, frame, 1);
+    imshow("original", frame);
+    frame.convertTo(frame32f, CV_32F);
+    filter2D(frame32f, frameFiltered, frame32f.depth(), mask, Point(1,1), 0);
+    if(absolut){
+      frameFiltered=abs(frameFiltered);
+    }
+    frameFiltered.convertTo(result, CV_8U);
+    imshow("filtroespacial", result);
+    key = (char) waitKey(10);
+    if( key == 27 ) break; // esc pressed!
+    switch(key){
+    case 'a':
+	  menu();
+      absolut=!absolut;
+      break;
+    case 'm':
+	  menu();
+      mask = Mat(3, 3, CV_32F, media);
+      scaleAdd(mask, 1/9.0, Mat::zeros(3,3,CV_32F), mask1);
+      mask = mask1;
+      printmask(mask);
+      break;
+    case 'g':
+	  menu();
+      mask = Mat(3, 3, CV_32F, gauss);
+      scaleAdd(mask, 1/16.0, Mat::zeros(3,3,CV_32F), mask1);
+      mask = mask1;
+      printmask(mask);
+      break;
+    case 'h':
+	  menu();
+      mask = Mat(3, 3, CV_32F, horizontal);
+      printmask(mask);
+      break;
+    case 'v':
+	  menu();
+      mask = Mat(3, 3, CV_32F, vertical);
+      printmask(mask);
+      break;
+    case 'l':
+	  menu();
+      mask = Mat(3, 3, CV_32F, laplacian);
+      printmask(mask);
+      break;
+	case 'x':
+	  menu();
+	  mask = Mat(5, 5, CV_32F, lapgauss);
+	  printmask(mask);
+    default:
+      break;
+    }
+  }
+  return 0;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resultado_6">resultado:</h3>
 
 </div>
 </div>
@@ -546,7 +917,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-03-29 16:23:10 -03
+Last updated 2018-03-30 18:54:16 -03
 </div>
 </div>
 </body>
