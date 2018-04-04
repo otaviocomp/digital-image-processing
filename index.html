@@ -428,27 +428,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_2_primeira_unidade">2. Primeira unidade</h2>
+<h2 id="_1_primeira_unidade">1 Primeira unidade</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>item 1</p>
-</li>
-<li>
-<p>item 2</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-cpp" data-lang="cpp">printf("Hello, World!");</code></pre>
-</div>
-</div>
+
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2_1_primeira_atividade_negativo_de_uma_região">2.1 Primeira atividade - negativo de uma região)</h2>
+<h2 id="_1_1_primeira_atividade_negativo_de_uma_região">1.1 Primeira atividade - negativo de uma região)</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A primeira atividade consiste em fazer o negativo de uma imagem. Para realizar está atividade basta atribuír o valor da imagem como sendo o 255 (escala máxima do tom de cinza) menos o valor atual da imagem, isto irá inverter os tons, causando o efeito de imagem em negativo.</p>
@@ -525,7 +511,7 @@ int main(int argc, char **argv){
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2_2_segunda_atividade_inverter_quadrantes">2.2 Segunda atividade - inverter quadrantes</h2>
+<h2 id="_1_2_segunda_atividade_inverter_quadrantes">1.2 Segunda atividade - inverter quadrantes</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A segunda atividade consiste na troca dos quadrantes da imagem. O primeiro e o terceiro quadrantes são trocados de posição, o primeiro fica no lugar do terceiro e vice versa, o mesmo acontece com o segundo e quarto quadrantes. No código abaixo, foram lidas duas imagens com o mesmo tamanho, a segunda imagem é o resultado da imagem carregada originalmente. Dentro do laço é realizada a operação da troca dos quadrantes, os pixels do primeiro quadrante foram copiados para a posição do terceiro e vice versa, o mesmo foi feito no segundo e quarto quadrante. No final, tem-se o resultado.</p>
@@ -571,7 +557,7 @@ int main(int argc, char **argv){
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2_3_terceira_atividade_rotulação">2.3 Terceira atividade - rotulação</h2>
+<h2 id="_1_3_terceira_atividade_rotulação">1.3 Terceira atividade - rotulação</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A terceira atividade consiste na contagem do número de objetos com bolhas que existem em uma determinada imagem. Primeiramente é feito um pré processamento para a retirada dos objetos que encostam na borda, isso é feito através do floodfill, que percorre todos os pixels da mesma cor de pixel inicial, também chamado de raíz, e os pinta de uma cor. Depois do pré processamento, aplica-se um floodfill no fundo da image, isso ajuda na diferenciação do fundo da imagem das bolhas. Depois é feito a rotulação, onde cada objeto é pintado com um tom de cinza que começa de 1 e vai até a quantidade de objetos na imagem. Por fim, percorre-se a imagem até encontrar um pixel preto, isso indica a presença de uma bolha, e aplica-se o floodfill para pintar a bolha.</p>
@@ -656,14 +642,20 @@ int main(int argc, char **argv){
 </div>
 <div class="title">Figure 3. resultado</div>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="images/resultado3,1.png" alt="resultado">
+</div>
+<div class="title">Figure 4. resultado</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2_4_quarta_atividade_histograma">2.4 Quarta atividade - histograma</h2>
+<h2 id="_1_4_quarta_atividade_histograma">1.4 Quarta atividade - histograma</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_2_4_1_equalização">2.4.1 equalização</h3>
+<h3 id="_1_4_1_equalização">1.4.1 equalização</h3>
 <div class="paragraph">
 <p>Nesta atividade é feita a equalização de uma imagem. Para isso usa-se a câmera disponível no pc para capturar a imagem. A equalização da imagem é feita através da função "equalizeHist", ela redistribui os tons da imagem de tal forma que as transições entre os tons sejam mais suaves.</p>
 </div>
@@ -751,16 +743,101 @@ int main(int argc, char** argv){
 <div class="content">
 <img src="images/resultado4.png" alt="equalize">
 </div>
-<div class="title">Figure 4. resultado</div>
+<div class="title">Figure 5. resultado</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_2_4_2_detector_de_movimentos">2.4.2 detector de movimentos</h3>
-
+<h3 id="_1_4_2_detector_de_movimentos">1.4.2 detector de movimentos</h3>
+<div class="paragraph">
+<p>Nesta atividade foi implementado um detector de movimentos. Ele calcula continuamente o histograma da imagem capturada, basta usar uma das 3 componentes da imagem colorida, neste caso, foi usada a componente vermelha da imagem. É feita uma comparação do histograma atual com o anterior para que seja detectado alguma variação do mesmo. Essa comparação é feita usando-se a correlação, foi usado a função compareHist com o parâmetro CV_COMP_CORREL.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_código_5">código:</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv){
+  Mat image;
+  int width, height;
+  VideoCapture cap;
+  vector&lt;Mat&gt; planes;
+  Mat histR, histR_ant;
+  int nbins = 64;
+  double d;
+  float range[] = {0, 256};
+  const float *histrange = { range };
+  bool uniform = true;
+  bool acummulate = false;
+
+  cap.open(0);
+
+  if(!cap.isOpened()){
+    cout &lt;&lt; "cameras indisponiveis";
+    return -1;
+  }
+
+  width  = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+  height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+
+  cout &lt;&lt; "largura = " &lt;&lt; width &lt;&lt; endl;
+  cout &lt;&lt; "altura  = " &lt;&lt; height &lt;&lt; endl;
+
+  int histw = nbins, histh = nbins/2;
+  Mat histImgR(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgR_ant(histh, histw, CV_8UC3, Scalar(0,0,0));
+  bool primeiro=true;
+
+  while(1){
+    cap &gt;&gt; image;
+    split (image, planes);
+
+    if(!primeiro){
+    	histR.copyTo(histR_ant);
+    	histImgR.copyTo(histImgR_ant);
+    }
+
+    calcHist(&amp;planes[0], 1, 0, Mat(), histR, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+    normalize(histR, histR, 0, histImgR.rows, NORM_MINMAX, -1, Mat());
+
+    histImgR.setTo(Scalar(0));
+
+    for(int i=0; i&lt;nbins; i++){
+      line(histImgR,
+           Point(i, histh),
+           Point(i, histh-cvRound(histR.at&lt;float&gt;(i))),
+           Scalar(0, 0, 255), 1, 8, 0);
+
+    }
+    histImgR.copyTo(image(Rect(0, 0,nbins, histh))); //o de cima é o da imagem atual
+    if (!primeiro)
+    	histImgR_ant.copyTo(image(Rect(0, histh,nbins, histh)));
+
+    if (!primeiro){
+    	d=compareHist(histR,histR_ant,CV_COMP_CORREL);
+    	cout &lt;&lt; d &lt;&lt; endl;
+    	if (d&lt;0.995){
+			printf("movimento detectado!!!\n");
+			imwrite("Detectado Movimento.png",image);
+			imshow("Detectado Movimento",image);
+    	}
+
+    }
+    primeiro=false;
+    imshow("image", image);
+    if(waitKey(30) &gt;= 0) break;
+  }
+  return 0;
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_resultado_5">resultado:</h3>
@@ -769,7 +846,7 @@ int main(int argc, char** argv){
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2_5_quinta_atividade_laplaciano_do_gaussiano">2.5 Quinta atividade - laplaciano do gaussiano</h2>
+<h2 id="_1_5_quinta_atividade_laplaciano_do_gaussiano">1.5 Quinta atividade - laplaciano do gaussiano</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">resultado</div>
@@ -919,16 +996,16 @@ int main(int argvc, char** argv){
 <div class="content">
 <img src="images/resultado5.png" alt="filtroEspacial">
 </div>
-<div class="title">Figure 5. resultado</div>
+<div class="title">Figure 6. resultado</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2_6_sexta_atividade_filtro_espacial">2.6 Sexta atividade - filtro espacial</h2>
+<h2 id="_1_6_sexta_atividade_filtro_espacial">1.6 Sexta atividade - filtro espacial</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_2_6_1_tiltshift">2.6.1 tiltshift</h3>
+<h3 id="_1_6_1_tiltshift">1.6.1 tiltshift</h3>
 
 </div>
 <div class="sect2">
@@ -985,7 +1062,6 @@ void on_trackbar_change(int, void*) {
 }
 
 int main(int argvc, char** argv){
-
   image1 = imread("../images/biel.png");
   image2 = image1.clone();
   Mat aux, mask, mask1;
@@ -1037,7 +1113,7 @@ int main(int argvc, char** argv){
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-04-01 20:27:47 -03
+Last updated 2018-04-04 13:56:11 -03
 </div>
 </div>
 </body>

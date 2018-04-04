@@ -59,17 +59,16 @@ int main(int argc, char** argv){
 
     }
     histImgR.copyTo(image(Rect(0, 0,nbins, histh))); //o de cima é o da imagem atual
-    if (!primeiro){
-    histImgR_ant.copyTo(image(Rect(0, histh,nbins, histh)));
-    }
+    if (!primeiro)
+    	histImgR_ant.copyTo(image(Rect(0, histh,nbins, histh)));
 
     if (!primeiro){
     	d=compareHist(histR,histR_ant,CV_COMP_CORREL);
     	cout << d << endl;
-    	if (d<0.998){
-    	 cout << "Movimento Detectado" << endl;
-    	 imwrite("Detectado Movimento.png",image);
-    	 imshow("Detectado Movimento",image);
+    	if (d<0.995){
+			printf("movimento detectado!!!\n");
+			imwrite("Detectado Movimento.png",image);
+    	    imshow("Detectado Movimento",image);
     	}
 
     }
