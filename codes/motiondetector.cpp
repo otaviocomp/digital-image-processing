@@ -9,20 +9,21 @@ int main(int argc, char** argv){
   int width, height;
   VideoCapture cap;
   vector<Mat> planes;
-  Mat histG, histG_prev;
+  Mat histR, histR_ant;
   int nbins = 64;
+  double d;
   float range[] = {0, 256};
   const float *histrange = { range };
   bool uniform = true;
   bool acummulate = false;
 
   cap.open(0);
-  
+
   if(!cap.isOpened()){
     cout << "cameras indisponiveis";
     return -1;
   }
-  
+
   width  = cap.get(CV_CAP_PROP_FRAME_WIDTH);
   height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
 
@@ -30,28 +31,49 @@ int main(int argc, char** argv){
   cout << "altura  = " << height << endl;
 
   int histw = nbins, histh = nbins/2;
-  Mat hist_img(histh, histw, CV_8UC3, Scalar(0,0,0));
-  Mat hist_img_prev(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgR(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgR_ant(histh, histw, CV_8UC3, Scalar(0,0,0));
+  bool primeiro=true;
 
   while(1){
     cap >> image;
     split (image, planes);
 
-    calcHist(&planes[0], 1, 0, Mat(), histG, 1,
+    if(!primeiro){
+    	histR.copyTo(histR_ant);
+    	histImgR.copyTo(histImgR_ant);
+    }
+
+    calcHist(&planes[0], 1, 0, Mat(), histR, 1,
              &nbins, &histrange,
              uniform, acummulate);
-    
-    normalize(histG, histG, 0, hist_img.rows, NORM_MINMAX, -1, Mat());
+    normalize(histR, histR, 0, histImgR.rows, NORM_MINMAX, -1, Mat());
 
-    hist_img.setTo(Scalar(0));
-    
+    histImgR.setTo(Scalar(0));
+
     for(int i=0; i<nbins; i++){
-    	line(hist_img,
-        	Point(i, histh),
-            Point(i, histh-cvRound(histR.at<float>(i))),
-            Scalar(0, 0, 255), 1, 8, 0);
+      line(histImgR,
+           Point(i, histh),
+           Point(i, histh-cvRound(histR.at<float>(i))),
+           Scalar(0, 0, 255), 1, 8, 0);
+
     }
-    hist_img.copyTo(image(Rect(0, 0       ,nbins, histh)));
+    histImgR.copyTo(image(Rect(0, 0,nbins, histh))); //o de cima é o da imagem atual
+    if (!primeiro){
+    histImgR_ant.copyTo(image(Rect(0, histh,nbins, histh)));
+    }
+
+    if (!primeiro){
+    	d=compareHist(histR,histR_ant,CV_COMP_CORREL);
+    	cout << d << endl;
+    	if (d<0.998){
+    	 cout << "Movimento Detectado" << endl;
+    	 imwrite("Detectado Movimento.png",image);
+    	 imshow("Detectado Movimento",image);
+    	}
+
+    }
+    primeiro=false;
     imshow("image", image);
     if(waitKey(30) >= 0) break;
   }
