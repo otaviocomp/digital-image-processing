@@ -85,7 +85,6 @@ int main(int argvc, char** argv){
           &center_slider,
           center_slider_max,
           on_trackbar_change );
-
   waitKey(0);
   return 0;
 }
