@@ -6,7 +6,7 @@ using namespace cv;
 int main( int argc, char** argv ){
   int nClusters = 6;
   Mat rotulos;
-  int nRodadas = 5;
+  int nRodadas = 1;
   Mat centros;
 
   if(argc!=3){
@@ -29,7 +29,7 @@ int main( int argc, char** argv ){
 		 rotulos,
 		 TermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 10000, 0.0001),
 		 nRodadas,
-		 KMEANS_PP_CENTERS,
+		 KMEANS_RANDOM_CENTERS,
 		 centros );
 
 
