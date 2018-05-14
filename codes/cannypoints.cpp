@@ -10,7 +10,7 @@
 
 #define STEP 5
 #define JITTER 3
-#define RAIO 4
+#define RAIO 6
 
 using namespace std;
 using namespace cv;
