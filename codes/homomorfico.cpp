@@ -7,48 +7,46 @@
 using namespace cv;
 using namespace std;
 
-	int yL, yLmax=100;
-	int yH, yHmax=100;
-	int D0, D0max=100;
-	int C0, C0max=100;
+int yL, yLmax=100;
+int yH, yHmax=100;
+int D0, D0max=100;
+int C0, C0max=100;
 
+Mat complexImage;
+Mat padded, filter,result,filtrada;
+Mat image, imagegray, temp;
+Mat_<float> realInput, zeros;
+vector<Mat> planos;
 
-  Mat complexImage;
-  Mat padded, filter,res,filtrada;
-  Mat image,imagegray, tmp;
-  Mat_<float> realInput, zeros;
-  vector<Mat> planos;
-  // valores ideais dos tamanhos da imagem
-  // para calculo da DFT
-  int dft_M, dft_N;
-  char TrackbarName[50];
-  char key;
+int dft_M, dft_N;
+char TrackbarName[50];
+char key;
 
 void on_trackbar_filtro(int, void*){
-
-    int dft_M= tmp.size().height;
-    int dft_N= tmp.size().width;
+    int dft_M= temp.size().height;
+    int dft_N= temp.size().width;
 
     double gH= yH/10.0;
     double gL= yL/10.0;
     double d0= D0/10.0;
-    // variacao 0-0.1
+    // variacao entre 0 e 0.1
     double c0= C0/1000.0;
 
   for(int i=0; i<dft_M; i++){
     for(int j=0; j<dft_N; j++){
     	double D= pow(i-dft_M/2,2)+pow(j-dft_N/2, 2);
-      tmp.at<float> (i,j) = (gH-gL)*(1-exp(-c0*D/pow(d0,2)))+gL;
+      temp.at<float> (i,j) = (gH-gL)*(1-exp(-c0*D/pow(d0,2)))+gL;
       }
    }
 
-    // junta os planos imaginario e real
-    Mat comps[]= {tmp, tmp};
+    // junta o plano real e o imaginario
+    Mat comps[]= {temp, temp};
     merge(comps, 2, filter);
 }
+
 // troca os quadrantes da imagem da DFT
 void deslocaDFT(Mat& image ){
-  Mat tmp, A, B, C, D;
+  Mat temp, A, B, C, D;
 
   // se a imagem tiver tamanho impar, recorta a regiao para
   // evitar cópias de tamanho desigual
@@ -65,17 +63,14 @@ void deslocaDFT(Mat& image ){
   D = image(Rect(cx, cy, cx, cy));
 
   // A <-> D
-  A.copyTo(tmp);  D.copyTo(A);  tmp.copyTo(D);
+  A.copyTo(temp);  D.copyTo(A);  temp.copyTo(D);
 
   // C <-> B
-  C.copyTo(tmp);  B.copyTo(C);  tmp.copyTo(B);
+  C.copyTo(temp);  B.copyTo(C);  temp.copyTo(B);
 }
 
 int main(int argc, char** argv){
-
-
   image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
-
   namedWindow("com filtro", CV_WINDOW_AUTOSIZE);
 
     sprintf( TrackbarName, "yH x %d", yHmax );
@@ -122,11 +117,9 @@ int main(int argc, char** argv){
 
   // cria uma matriz temporária para criar as componentes real
   // e imaginaria do filtro ideal
-  tmp = Mat(dft_M, dft_N, CV_32F);
-
+  temp = Mat(dft_M, dft_N, CV_32F);
 
   while(1){
-
     imagegray= image.clone();
 
     imshow("original", imagegray);
@@ -179,19 +172,16 @@ int main(int argc, char** argv){
     normalize(planos[0], planos[0], 0, 1, CV_MINMAX);
     imshow("com filtro", planos[0]);
     planos[0].convertTo(filtrada, CV_8UC1, 255.0);
-    imwrite("comfiltro.png",filtrada);
 
     vector<Mat> pFiltro;
     split(filter,pFiltro);
     normalize(pFiltro[0], pFiltro[0], 0, 1, CV_MINMAX);
     // converte para uchar para salvar
-    pFiltro[0].convertTo(res, CV_8UC1, 255.0);
-    imshow("filtro",res);
-    imwrite("filtro.png",res);
+    pFiltro[0].convertTo(result, CV_8UC1, 255.0);
+    imshow("filtro",result);
 
     key = (char) waitKey(10);
-    if( key == 27 ) break; // esc pressed!
+    if( key == 27 ) break; 
     }
-
   return 0;
 }
