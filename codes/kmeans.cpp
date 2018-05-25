@@ -4,6 +4,8 @@
 using namespace cv;
 
 int main( int argc, char** argv ){
+  int i;	
+  for(i = 10; i--;){
   int nClusters = 6;
   Mat rotulos;
   int nRodadas = 1;
@@ -44,5 +46,6 @@ int main( int argc, char** argv ){
   }
   imshow( "clustered image", rotulada );
   imwrite(argv[2], rotulada);
-  waitKey( 0 );
+  //waitKey( 0 );
+  }
 }

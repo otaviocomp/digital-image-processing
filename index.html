@@ -1600,12 +1600,70 @@ int main(int argc, char**argv){
 <div class="paragraph">
 <p>As imagens diferem entre si devido ao sorteio dos centros iniciais e devido ao fato de o algoritmo ter um nRodadas igual a 1, ou seja, uma rodada foi executada no algoritmo, logo nao tem como comparar as diversas rodadas por se tratar de apenas uma.</p>
 </div>
+<div class="sect2">
+<h3 id="_codigo_3">codigo</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;opencv2/opencv.hpp&gt;
+#include &lt;cstdlib&gt;
+
+using namespace cv;
+
+int main( int argc, char** argv ){
+  int i;
+  for(i = 10; i--;){
+  int nClusters = 6;
+  Mat rotulos;
+  int nRodadas = 1;
+  Mat centros;
+
+  if(argc!=3){
+	exit(0);
+  }
+
+  Mat img = imread( argv[1], CV_LOAD_IMAGE_COLOR);
+  Mat samples(img.rows * img.cols, 3, CV_32F);
+
+  for( int y = 0; y &lt; img.rows; y++ ){
+    for( int x = 0; x &lt; img.cols; x++ ){
+      for( int z = 0; z &lt; 3; z++){
+        samples.at&lt;float&gt;(y + x*img.rows, z) = img.at&lt;Vec3b&gt;(y,x)[z];
+	  }
+	}
+  }
+
+  kmeans(samples,
+		 nClusters,
+		 rotulos,
+		 TermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 10000, 0.0001),
+		 nRodadas,
+		 KMEANS_RANDOM_CENTERS,
+		 centros );
+
+
+  Mat rotulada( img.size(), img.type() );
+  for( int y = 0; y &lt; img.rows; y++ ){
+    for( int x = 0; x &lt; img.cols; x++ ){
+	  int indice = rotulos.at&lt;int&gt;(y + x*img.rows,0);
+	  rotulada.at&lt;Vec3b&gt;(y,x)[0] = (uchar) centros.at&lt;float&gt;(indice, 0);
+	  rotulada.at&lt;Vec3b&gt;(y,x)[1] = (uchar) centros.at&lt;float&gt;(indice, 1);
+	  rotulada.at&lt;Vec3b&gt;(y,x)[2] = (uchar) centros.at&lt;float&gt;(indice, 2);
+	}
+  }
+  imshow( "clustered image", rotulada );
+  imwrite(argv[2], rotulada);
+  //waitKey( 0 );
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-05-25 14:17:59 UTC
+Last updated 2018-05-25 14:26:22 UTC
 </div>
 </div>
 </body>
